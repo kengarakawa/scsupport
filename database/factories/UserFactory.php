@@ -1,9 +1,7 @@
 <?php
-
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -13,27 +11,40 @@ class UserFactory extends Factory
      * @return array
      */
     public function definition()
-    {
-        return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+    {   // $faker = Faker\Factory::create();
+        
+        $originalDistributors = [
+            [ 'id' => '22121124'  , 'name' => 'Inge Sarfelt' ] , 
+            [ 'id' => '22121127'  , 'name' => 'Jan Madsen' ] , 
+            [ 'id' => '22121199'  , 'name' => 'Louise Hjorth' ] ,             
         ];
-    }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function unverified()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
+        
+        
+        $od = $originalDistributors[ $this->faker->randomKey($originalDistributors) ];
+        return [
+            //
+            'distributor_id' => sprintf('22000%05d' , rand(1,9999)) , 
+            'full_name' => $this->faker->unique()->name() , 
+            'phone' => $this->faker->phoneNumber() , 
+            'email' => $this->faker->email() ,
+            'avatar_url' => $this->faker->imageUrl(360, 360, 'animals') , 
+                    
+            'password' => bcrypt('password') , 
+            'original_distributor' => $od['id'] , 
+            'original_distributor_name' => $od['name'] , 
+            'current_distributor' => $od['id'] , 
+            'current_distributor_name' => $od['name'] ,
+            
+            'privileges' => 'C' , 
+            'signup_at' => $this->faker->dateTimeBetween('-10 YEAR', '-1 week') , 
+            
+            'rank' => 'distributor' , 
+            'team' => 'global' , 
+            'account_status' => 10 , 
+            
+            'remember_token' => $this->faker->numerify('###########') ,                         
+            'email_verified_at' => now(),
+            'created_at' => now()  
+        ];
     }
 }
